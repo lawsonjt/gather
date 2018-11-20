@@ -1,0 +1,36 @@
+{
+  "name": "pinter",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "drop-db": "node ./bin/drop-database",
+    "seed-db": "node ./bin/seed-database",
+    "start": "node ./bin/www",
+    "test": "bin/mocha-test && bin/wdio-test",
+    "test:mocha": "bin/mocha-test || exit 0"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "~1.4.3",
+    "eslint": "^4.9.0",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
+    "fibers": "^3.0.0",
+    "mongoose": "^4.11.13",
+    "morgan": "^1.9.1",
+    "n": "^2.1.12",
+    "node-gyp": "^3.8.0",
+    "phantomjs-prebuilt": "^2.1.16"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint-config-google": "^0.9.1",
+    "jsdom": "^9.12.0",
+    "mocha": "^3.0.0",
+    "supertest": "^3.0.0",
+    "wdio-mocha-framework": "^0.6.4",
+    "wdio-phantomjs-service": "^0.2.2",
+    "wdio-spec-reporter": "^0.1.2",
+    "webdriverio": "^4.14.0"
+  }
+}
