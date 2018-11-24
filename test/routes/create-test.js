@@ -26,7 +26,6 @@ describe('Server path: /items/create', () => {
 
     afterEach(diconnectDatabase);
 
-    // Write your describe blocks below:
     describe('GET', () => {
         it('renders empty input fields', async () => {
             const response = await request(app)
@@ -38,17 +37,75 @@ describe('Server path: /items/create', () => {
             assert.equal(parseTextFromHTML(response.text, 'textarea#description-input'), '');
         });
         describe('POST', () => {
-            it('creates and renders a new item', async () => {
+            it('creates an item', async () => {
                 const itemToCreate = buildItemObject();
                 const response = await request(app)
                     .post('/items/create')
                     .type('form')
                     .send(itemToCreate);
 
-                // assert route renders info
-                assert.include(parseTextFromHTML(response.text, '.item-title'), itemToCreate.title);
-                const imageElement = findImageElementBySource(response.text, itemToCreate.imageUrl);
-                assert.equal(imageElement.src, itemToCreate.imageUrl);
+                const createdItem = await Item.findOne(itemToCreate);
+                assert.isOk(createdItem, 'Item was not created successfully in the database');
+
+            });
+
+            it('redirects after an item is created', async () => {
+                const itemToCreate = buildItemObject();
+                const response = await request(app)
+                    .post('/items/create')
+                    .type('form')
+                    .send(itemToCreate);
+
+                assert.equal(response.status, 302); // assert redirect
+                assert.equal(response.headers.location, '/');
+            });
+
+            it('displays an error message when supplied an empty title', async () => {
+                const invalidItemToCreate = {
+                    description: 'test',
+                    imageUrl: 'https://www.placebear.com/200/300',
+                };
+
+                const response = await request(app)
+                    .post('/items/create')
+                    .type('form')
+                    .send(invalidItemToCreate);
+
+                assert.deepEqual(await Item.find({}), []);
+                assert.equal(response.status, 400);
+                assert.include(parseTextFromHTML(response.text, 'form'), 'required');
+            });
+
+            it('displays an error message when supplied an empty description', async () => {
+                const invalidItemToCreate = {
+                    title: 'test',
+                    imageUrl: 'https://www.placebear.com/200/300',
+                };
+
+                const response = await request(app)
+                    .post('/items/create')
+                    .type('form')
+                    .send(invalidItemToCreate);
+
+                assert.deepEqual(await Item.find({}), []);
+                assert.equal(response.status, 400);
+                assert.include(parseTextFromHTML(response.text, 'form'), 'required');
+            });
+
+            it('displays an error message when supplied an empty imageUrl', async () => {
+                const invalidItemToCreate = {
+                    title: 'test',
+                    description: 'test',
+                };
+
+                const response = await request(app)
+                    .post('/items/create')
+                    .type('form')
+                    .send(invalidItemToCreate);
+
+                assert.deepEqual(await Item.find({}), []);
+                assert.equal(response.status, 400);
+                assert.include(parseTextFromHTML(response.text, 'form'), 'required');
             });
         });
 
