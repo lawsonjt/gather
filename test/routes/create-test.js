@@ -45,7 +45,7 @@ describe('Server path: /items/create', () => {
                     .send(itemToCreate);
 
                 const createdItem = await Item.findOne(itemToCreate);
-                assert.isOk(createdItem, 'Item was not created successfully in the database');
+                assert.isOk(createdItem, 'Item was created successfully in the database');
 
             });
 

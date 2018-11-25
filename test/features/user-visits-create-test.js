@@ -1,7 +1,6 @@
 const {assert} = require('chai');
 const {buildItemObject} = require('../test-utils');
 
-// Add your tests below:
 describe('user visits create page', () => {
     describe('posts a new item', () => {
        it('renders item to page', () => {
